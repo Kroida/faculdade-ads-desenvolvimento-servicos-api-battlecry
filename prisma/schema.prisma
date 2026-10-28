@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model categorias {
+  id       Int        @id @default(autoincrement())
+  nome     String     @db.VarChar(100)
+  produtos produtos[]
+}
+
+model cidades {
+  id       Int        @id @default(autoincrement())
+  nome     String     @db.VarChar(50)
+  clientes clientes[]
+}
+
+model clientes {
+  id         Int       @id @default(autoincrement())
+  nome       String    @db.VarChar(100)
+  altura     Float?
+  nascimento DateTime? @db.Date
+  cidade_id  Int?
+  cidades    cidades?  @relation(fields: [cidade_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clientes_cidades")
+  pedidos    pedidos[]
+
+  @@index([cidade_id], map: "fk_clientes_cidades")
+}
+
+model pedidos {
+  id               Int                @id @default(autoincrement())
+  horario          DateTime           @db.DateTime(0)
+  endereco         String             @db.VarChar(200)
+  cliente_id       Int
+  clientes         clientes           @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pedidos_clientes")
+  pedidos_produtos pedidos_produtos[]
+
+  @@index([cliente_id], map: "fk_pedidos_clientes")
+}
+
+model pedidos_produtos {
+  pedido_id  Int
+  produto_id Int
+  preco      Float
+  quantidade Float
+  pedidos    pedidos  @relation(fields: [pedido_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pedidos_produtos_pedidos")
+  produtos   produtos @relation(fields: [produto_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pedidos_produtos_produtos")
+
+  @@id([pedido_id, produto_id])
+  @@index([produto_id], map: "fk_pedidos_produtos_produtos")
+}
+
+model produtos {
+  id               Int                @id @default(autoincrement())
+  nome             String             @db.VarChar(100)
+  preco            Float
+  quantidade       Float
+  categorias_id    Int
+  pedidos_produtos pedidos_produtos[]
+  categorias       categorias         @relation(fields: [categorias_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_produtos_categorias")
+
+  @@index([categorias_id], map: "fk_produtos_categorias")
+}
