@@ -17,7 +17,7 @@ async function criarCliente(dados) {
     }
 
     if (dados.altura !== undefined && typeof dados.altura !== "number") {
-        throw new NotFoundError("Altura deve ser numérica");
+        throw new BadRequestError("Altura deve ser numérica");
     }
 
     const cidade = await clienteRepository.buscarCidadePorId(dados.cidade_id);
@@ -37,7 +37,7 @@ async function buscarCliente(id) {
     const cliente = await clienteRepository.buscarPorId(id);
 
     if(!cliente) {
-        throw new Error("Cliente não encontrado");
+        throw new NotFoundError("Cliente não encontrado");
     }
 
     return cliente;
