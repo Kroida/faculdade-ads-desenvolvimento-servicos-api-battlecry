@@ -2,7 +2,12 @@ const pedidoService = require("../services/pedidoService");
 
 async function criar(req, res, next) {
     try {
-        const pedido = await pedidoService.criarPedido(req.body);
+        const dadosPedido = {
+            ...req.body,
+            cliente_id: req.usuario.id
+        };
+
+        const pedido = await pedidoService.criarPedido(dadosPedido);
 
         return res.status(201).json(pedido);
     } catch (error) {

@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 const clienteRepository = require("../repositories/clienteRepository");
 
 const NotFoundError = require("../errors/NotFoundError");
@@ -12,12 +14,12 @@ async function criarCliente(dados) {
         throw new BadRequestError("Nome deve ser uma string");
     }
 
-    if (!Number.isInteger(dados.cidade_id)) {
-        throw new BadRequestError("cidade_id deve ser um número inteiro");
-    }
-
     if (dados.altura !== undefined && typeof dados.altura !== "number") {
         throw new BadRequestError("Altura deve ser numérica");
+    }
+
+    if (!Number.isInteger(dados.cidade_id)) {
+        throw new BadRequestError("cidade_id deve ser um número inteiro");
     }
 
     const cidade = await clienteRepository.buscarCidadePorId(dados.cidade_id);
@@ -25,6 +27,30 @@ async function criarCliente(dados) {
     if(!cidade) {
         throw new NotFoundError("Cidade não encontrada");
     }
+
+    if (!dados.email || typeof dados.email !== "string") {
+        throw new BadRequestError("Email é obrigatório");
+    }
+
+    const usuarioExistente = await clienteRepository.buscarPorEmail(dados.email);
+
+    if (usuarioExistente) {
+        throw new BadRequestError("Email já cadastrado");
+    }
+
+    if (!dados.senha.length < 6) {
+        throw new BadRequestError(
+            "Senha deve possuir pelo menos 6 caracteres"
+        );
+    }
+
+    const senhaHash = await bcrypt.hash(dados.senha, 10);
+
+    const cliente = {
+        ...dados,
+        senha: senhaHash,
+        tipo: "CLIENTE"
+    };
 
     return clienteRepository.criar(dados);
 }

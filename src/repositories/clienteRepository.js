@@ -35,9 +35,18 @@ async function buscarCidadePorId(id) {
     });
 }
 
+async function buscarPorEmail(email) {
+    return prisma.clientes.findUnique({
+        where: {
+            email: email
+        }
+    });
+}
+
 module.exports = {
     criar,
     listar,
     buscarPorId,
-    buscarCidadePorId
+    buscarCidadePorId,
+    buscarPorEmail
 };

@@ -23,12 +23,15 @@ model clientes {
   id         Int       @id @default(autoincrement())
   nome       String    @db.VarChar(100)
   altura     Float?
-  nascimento DateTime? @db.Date
+  nascimento DateTime?
   cidade_id  Int?
-  cidades    cidades?  @relation(fields: [cidade_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_clientes_cidades")
+  email      String    @unique @db.VarChar(150)
+  senha      String    @db.VarChar(255)
+  tipo       String    @default("CLIENTE") @db.VarChar(20)
+  cidades    cidades?  @relation(fields: [cidade_id], references: [id])
   pedidos    pedidos[]
 
-  @@index([cidade_id], map: "fk_clientes_cidades")
+  @@index([cidade_id], map: "clientes_cidade_id_fkey")
 }
 
 model pedidos {
