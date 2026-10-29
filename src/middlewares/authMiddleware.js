@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 
+const UnauthorizedError = require("../errors/UnauthorizedError");
+
 function autenticar(req, res, next) {
     const authorization = req.headers.authorization;
 
@@ -22,9 +24,7 @@ function autenticar(req, res, next) {
         next();
 
     } catch (error) {
-        return res.status(401).json({
-            erro: "Token inválido"
-        });
+        throw new UnauthorizedError("Token inválido");
     }
 }
 
