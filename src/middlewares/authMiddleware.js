@@ -6,12 +6,14 @@ function autenticar(req, res, next) {
     const authorization = req.headers.authorization;
 
     if (!authorization) {
-        return res.status(401).json({
-            erro: "Token não informado"
-        });
+        throw new UnauthorizedError("Token não informado");
     }
 
-    const [, token] = authorization.split(" ");
+    const [tipo, token] = authorization.split(" ");
+
+    if (tipo !== "Bearer" || !token) {
+        throw new UnauthorizedError("Token inválido");
+    }
 
     try {
         const payload = jwt.verify(
@@ -22,7 +24,6 @@ function autenticar(req, res, next) {
         req.usuario = payload;
 
         next();
-
     } catch (error) {
         throw new UnauthorizedError("Token inválido");
     }

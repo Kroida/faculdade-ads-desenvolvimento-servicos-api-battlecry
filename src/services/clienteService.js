@@ -24,7 +24,7 @@ async function criarCliente(dados) {
 
     const cidade = await clienteRepository.buscarCidadePorId(dados.cidade_id);
 
-    if(!cidade) {
+    if (!cidade) {
         throw new NotFoundError("Cidade não encontrada");
     }
 
@@ -38,10 +38,12 @@ async function criarCliente(dados) {
         throw new BadRequestError("Email já cadastrado");
     }
 
-    if (!dados.senha.length < 6) {
-        throw new BadRequestError(
-            "Senha deve possuir pelo menos 6 caracteres"
-        );
+    if (!dados.senha || typeof dados.senha !== "string") {
+        throw new BadRequestError("Senha é obrigatória");
+    }
+
+    if (dados.senha.length < 6) {
+        throw new BadRequestError("Senha deve possuir pelo menos 6 caracteres");
     }
 
     const senhaHash = await bcrypt.hash(dados.senha, 10);
@@ -52,7 +54,7 @@ async function criarCliente(dados) {
         tipo: "CLIENTE"
     };
 
-    return clienteRepository.criar(dados);
+    return clienteRepository.criar(cliente);
 }
 
 async function listarClientes() {
@@ -62,7 +64,7 @@ async function listarClientes() {
 async function buscarCliente(id) {
     const cliente = await clienteRepository.buscarPorId(id);
 
-    if(!cliente) {
+    if (!cliente) {
         throw new NotFoundError("Cliente não encontrado");
     }
 
@@ -73,4 +75,4 @@ module.exports = {
     criarCliente,
     listarClientes,
     buscarCliente
-}
+};

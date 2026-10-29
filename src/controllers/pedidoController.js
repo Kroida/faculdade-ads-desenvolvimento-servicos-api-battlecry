@@ -15,9 +15,9 @@ async function criar(req, res, next) {
     }
 }
 
-async function listarPorCliente(req, res, next) {
+async function listarMeus(req, res, next) {
     try {
-        const clienteId = Number(req.params.clienteId);
+        const clienteId = req.usuario.id;
 
         const pedidos = await pedidoService.listarPedidosCliente(clienteId);
 
@@ -29,5 +29,5 @@ async function listarPorCliente(req, res, next) {
 
 module.exports = {
     criar,
-    listarPorCliente
+    listarMeus
 };

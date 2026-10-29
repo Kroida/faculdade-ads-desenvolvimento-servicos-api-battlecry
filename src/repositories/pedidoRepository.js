@@ -1,5 +1,6 @@
-const {PrismaClient} = require("@prisma/client");
+const { PrismaClient } = require("@prisma/client");
 const BadRequestError = require("../errors/BadRequestError");
+const NotFoundError = require("../errors/NotFoundError");
 
 const prisma = new PrismaClient();
 
@@ -21,11 +22,11 @@ async function criar(dados) {
             });
 
             if (!produto) {
-                throw new BadRequestError(
+                throw new NotFoundError(
                     `Produto ${item.produto_id} não encontrado`
                 );
             }
-           
+
             const estoqueAtualizado = await tx.produtos.updateMany({
                 where: {
                     id: item.produto_id,

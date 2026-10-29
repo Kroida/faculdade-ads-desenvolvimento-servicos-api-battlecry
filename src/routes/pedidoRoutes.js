@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.post("/", autenticar, pedidoController.criar);
 
-router.get("/cliente/:clienteId", pedidoController.listarPorCliente);
+router.get("/meus", autenticar, pedidoController.listarMeus);
 
 module.exports = router;

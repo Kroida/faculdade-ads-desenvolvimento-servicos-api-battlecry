@@ -1,18 +1,28 @@
-const {PrismaClient} = require("@prisma/client");
+const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
+const clientePublico = {
+    id: true,
+    nome: true,
+    altura: true,
+    nascimento: true,
+    cidade_id: true,
+    email: true,
+    tipo: true,
+    cidades: true
+};
+
 async function criar(cliente) {
     return prisma.clientes.create({
-        data: cliente
+        data: cliente,
+        select: clientePublico
     });
 }
 
 async function listar() {
     return prisma.clientes.findMany({
-        include: {
-            cidades: true
-        }
+        select: clientePublico
     });
 }
 
@@ -21,9 +31,7 @@ async function buscarPorId(id) {
         where: {
             id: id
         },
-        include: {
-            cidades: true
-        }
+        select: clientePublico
     });
 }
 

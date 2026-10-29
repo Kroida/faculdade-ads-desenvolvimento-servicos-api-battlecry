@@ -3,7 +3,7 @@ const produtoRepository = require("../repositories/produtoRepository");
 const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 
-async function criarProduto(dados) {
+async function validarProduto(dados) {
     if (!dados.nome) {
         throw new BadRequestError("Nome é obrigatório");
     }
@@ -25,6 +25,10 @@ async function criarProduto(dados) {
     if (!categoria) {
         throw new NotFoundError("Categoria não encontrada");
     }
+}
+
+async function criarProduto(dados) {
+    await validarProduto(dados);
 
     return produtoRepository.criar(dados);
 }
@@ -45,6 +49,7 @@ async function buscarProduto(id) {
 
 async function atualizarProduto(id, dados) {
     await buscarProduto(id);
+    await validarProduto(dados);
 
     return produtoRepository.atualizar(id, dados);
 }
@@ -61,4 +66,4 @@ module.exports = {
     buscarProduto,
     atualizarProduto,
     deletarProduto
-}
+};

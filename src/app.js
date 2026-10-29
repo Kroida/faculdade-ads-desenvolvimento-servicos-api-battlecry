@@ -5,6 +5,7 @@ const produtoRoutes = require("./routes/produtoRoutes");
 const pedidoRoutes = require("./routes/pedidoRoutes");
 const authRoutes = require("./routes/authRoutes");
 
+const NotFoundError = require("./errors/NotFoundError");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 
 const app = express();
@@ -12,9 +13,13 @@ const app = express();
 app.use(express.json());
 
 app.use("/clientes", clienteRoutes);
-app.use("/produtos", produtoRoutes)
+app.use("/produtos", produtoRoutes);
 app.use("/pedidos", pedidoRoutes);
 app.use("/auth", authRoutes);
+
+app.use((req, res, next) => {
+    next(new NotFoundError("Rota não encontrada"));
+});
 
 app.use(errorMiddleware);
 

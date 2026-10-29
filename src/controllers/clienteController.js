@@ -1,4 +1,5 @@
 const clienteService = require("../services/clienteService");
+const BadRequestError = require("../errors/BadRequestError");
 
 async function criar(req, res, next) {
     try {
@@ -21,7 +22,7 @@ async function buscarPorId(req, res, next) {
         const id = Number(req.params.id);
 
         if (!Number.isInteger(id)) {
-            throw new Error("ID inválido");
+            throw new BadRequestError("ID inválido");
         }
 
         const cliente = await clienteService.buscarCliente(id);
@@ -36,4 +37,4 @@ module.exports = {
     criar,
     listar,
     buscarPorId
-}
+};
