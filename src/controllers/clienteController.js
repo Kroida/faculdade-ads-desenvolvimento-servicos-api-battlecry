@@ -16,7 +16,7 @@ async function listar(req, res) {
     return res.status(200).json(clientes);
 }
 
-async function buscarPorId(req, res) {
+async function buscarPorId(req, res, next) {
     try {
         const id = Number(req.params.id);
 
