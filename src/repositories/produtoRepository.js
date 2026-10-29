@@ -1,6 +1,4 @@
-const {PrismaClient} = require("@prisma/client");
-
-const prisma = new PrismaClient();
+const prisma = require("../database/prisma");
 
 async function criar(produto) {
     return prisma.produtos.create({
@@ -18,9 +16,7 @@ async function listar() {
 
 async function buscarPorId(id) {
     return prisma.produtos.findUnique({
-        where: {
-            id: id
-        },
+        where: { id },
         include: {
             categorias: true
         }
@@ -29,26 +25,20 @@ async function buscarPorId(id) {
 
 async function atualizar(id, produto) {
     return prisma.produtos.update({
-        where: {
-            id: id
-        },
+        where: { id },
         data: produto
     });
 }
 
 async function deletar(id) {
     return prisma.produtos.delete({
-        where: {
-            id: id
-        }
+        where: { id }
     });
 }
 
 async function buscarCategoriaPorId(id) {
     return prisma.categorias.findUnique({
-        where: {
-            id: id
-        }
+        where: { id }
     });
 }
 

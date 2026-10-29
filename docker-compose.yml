@@ -5,13 +5,13 @@ services:
     restart: unless-stopped
 
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: battlecry_bd
-      MYSQL_USER: battlecry_user
-      MYSQL_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-battlecry_bd}
+      MYSQL_USER: ${MYSQL_USER:-battlecry_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-1234}
 
     ports:
-      - "5432:3306"
+      - "${MYSQL_EXPOSED_PORT:-5432}:3306"
 
     volumes:
       - mysql_data:/var/lib/mysql

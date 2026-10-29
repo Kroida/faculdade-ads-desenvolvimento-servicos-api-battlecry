@@ -1,30 +1,27 @@
 const produtoService = require("../services/produtoService");
-const BadRequestError = require("../errors/BadRequestError");
+const { validarId } = require("../utils/validationUtils");
 
 async function criar(req, res, next) {
     try {
         const produto = await produtoService.criarProduto(req.body);
-
         return res.status(201).json(produto);
     } catch (error) {
         next(error);
     }
 }
 
-async function listar(req, res) {
-    const produtos = await produtoService.listarProdutos();
-
-    return res.status(200).json(produtos);
+async function listar(req, res, next) {
+    try {
+        const produtos = await produtoService.listarProdutos();
+        return res.status(200).json(produtos);
+    } catch (error) {
+        next(error);
+    }
 }
 
 async function buscarPorId(req, res, next) {
     try {
-        const id = Number(req.params.id);
-
-        if (!Number.isInteger(id)) {
-            throw new BadRequestError("ID inválido");
-        }
-
+        const id = validarId(req.params.id);
         const produto = await produtoService.buscarProduto(id);
 
         return res.status(200).json(produto);
@@ -35,12 +32,7 @@ async function buscarPorId(req, res, next) {
 
 async function atualizar(req, res, next) {
     try {
-        const id = Number(req.params.id);
-
-        if (!Number.isInteger(id)) {
-            throw new BadRequestError("ID inválido");
-        }
-
+        const id = validarId(req.params.id);
         const produto = await produtoService.atualizarProduto(id, req.body);
 
         return res.status(200).json(produto);
@@ -50,13 +42,8 @@ async function atualizar(req, res, next) {
 }
 
 async function deletar(req, res, next) {
-    try{
-        const id = Number(req.params.id);
-
-        if (!Number.isInteger(id)) {
-            throw new BadRequestError("ID inválido");
-        }
-
+    try {
+        const id = validarId(req.params.id);
         await produtoService.deletarProduto(id);
 
         return res.status(204).send();
@@ -71,4 +58,4 @@ module.exports = {
     buscarPorId,
     atualizar,
     deletar
-}
+};

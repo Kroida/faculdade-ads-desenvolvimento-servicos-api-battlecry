@@ -1,6 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
-
-const prisma = new PrismaClient();
+const prisma = require("../database/prisma");
 
 const clientePublico = {
     id: true,
@@ -28,26 +26,22 @@ async function listar() {
 
 async function buscarPorId(id) {
     return prisma.clientes.findUnique({
-        where: {
-            id: id
-        },
+        where: { id },
         select: clientePublico
     });
 }
 
 async function buscarCidadePorId(id) {
     return prisma.cidades.findUnique({
-        where: {
-            id: id
-        }
+        where: { id }
     });
 }
 
+// Consulta interna para autenticação. Aqui a senha precisa ser recuperada
+// para que o bcrypt consiga comparar o hash salvo com a senha informada.
 async function buscarPorEmail(email) {
     return prisma.clientes.findUnique({
-        where: {
-            email: email
-        }
+        where: { email }
     });
 }
 

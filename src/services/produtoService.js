@@ -4,20 +4,20 @@ const NotFoundError = require("../errors/NotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 
 async function validarProduto(dados) {
-    if (!dados.nome) {
+    if (!dados.nome || typeof dados.nome !== "string" || !dados.nome.trim()) {
         throw new BadRequestError("Nome é obrigatório");
     }
 
-    if (typeof dados.preco !== "number") {
-        throw new BadRequestError("Preço deve ser numérico");
+    if (typeof dados.preco !== "number" || !Number.isFinite(dados.preco) || dados.preco < 0) {
+        throw new BadRequestError("Preço deve ser um número maior ou igual a zero");
     }
 
-    if (typeof dados.quantidade !== "number") {
-        throw new BadRequestError("Quantidade deve ser numérica");
+    if (typeof dados.quantidade !== "number" || !Number.isFinite(dados.quantidade) || dados.quantidade < 0) {
+        throw new BadRequestError("Quantidade deve ser um número maior ou igual a zero");
     }
 
-    if (!Number.isInteger(dados.categorias_id)) {
-        throw new BadRequestError("categorias_id deve ser um número inteiro");
+    if (!Number.isInteger(dados.categorias_id) || dados.categorias_id <= 0) {
+        throw new BadRequestError("categorias_id deve ser um número inteiro positivo");
     }
 
     const categoria = await produtoRepository.buscarCategoriaPorId(dados.categorias_id);

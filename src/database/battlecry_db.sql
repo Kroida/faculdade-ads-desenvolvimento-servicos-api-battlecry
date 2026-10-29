@@ -1,4 +1,4 @@
--- CREATE DATABASE battlecry_bd;
+CREATE DATABASE IF NOT EXISTS battlecry_bd;
 USE battlecry_bd;
 
 CREATE TABLE cidades (
@@ -12,14 +12,19 @@ CREATE TABLE clientes (
     id INT AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     altura DOUBLE,
-    nascimento DATE,
+    nascimento DATETIME(3),
     cidade_id INT,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    tipo VARCHAR(20) NOT NULL DEFAULT 'CLIENTE',
 
     PRIMARY KEY (id),
 
-    CONSTRAINT fk_clientes_cidades
+    CONSTRAINT clientes_cidade_id_fkey
         FOREIGN KEY (cidade_id)
         REFERENCES cidades(id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
 );
 
 CREATE TABLE pedidos (

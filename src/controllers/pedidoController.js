@@ -8,7 +8,6 @@ async function criar(req, res, next) {
         };
 
         const pedido = await pedidoService.criarPedido(dadosPedido);
-
         return res.status(201).json(pedido);
     } catch (error) {
         next(error);
@@ -17,10 +16,16 @@ async function criar(req, res, next) {
 
 async function listarMeus(req, res, next) {
     try {
-        const clienteId = req.usuario.id;
+        const pedidos = await pedidoService.listarPedidosCliente(req.usuario.id);
+        return res.status(200).json(pedidos);
+    } catch (error) {
+        next(error);
+    }
+}
 
-        const pedidos = await pedidoService.listarPedidosCliente(clienteId);
-
+async function listarTodos(req, res, next) {
+    try {
+        const pedidos = await pedidoService.listarTodosPedidos();
         return res.status(200).json(pedidos);
     } catch (error) {
         next(error);
@@ -29,5 +34,6 @@ async function listarMeus(req, res, next) {
 
 module.exports = {
     criar,
-    listarMeus
+    listarMeus,
+    listarTodos
 };

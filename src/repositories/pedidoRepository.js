@@ -1,8 +1,14 @@
-const { PrismaClient } = require("@prisma/client");
+const prisma = require("../database/prisma");
 const BadRequestError = require("../errors/BadRequestError");
 const NotFoundError = require("../errors/NotFoundError");
 
-const prisma = new PrismaClient();
+const itensDoPedido = {
+    pedidos_produtos: {
+        include: {
+            produtos: true
+        }
+    }
+};
 
 async function criar(dados) {
     return prisma.$transaction(async (tx) => {
@@ -16,9 +22,7 @@ async function criar(dados) {
 
         for (const item of dados.produtos) {
             const produto = await tx.produtos.findUnique({
-                where: {
-                    id: item.produto_id
-                }
+                where: { id: item.produto_id }
             });
 
             if (!produto) {
@@ -27,6 +31,8 @@ async function criar(dados) {
                 );
             }
 
+            // A condição gte + decrement acontece dentro da transação e evita
+            // que o estoque fique negativo em uma compra concorrente.
             const estoqueAtualizado = await tx.produtos.updateMany({
                 where: {
                     id: item.produto_id,
@@ -34,7 +40,6 @@ async function criar(dados) {
                         gte: item.quantidade
                     }
                 },
-
                 data: {
                     quantidade: {
                         decrement: item.quantidade
@@ -67,15 +72,26 @@ async function listarPorCliente(clienteId) {
         where: {
             cliente_id: clienteId
         },
+        include: itensDoPedido,
+        orderBy: {
+            horario: "desc"
+        }
+    });
+}
 
+// Endpoint administrativo: consulta todos os pedidos sem expor a senha do cliente.
+async function listarTodos() {
+    return prisma.pedidos.findMany({
         include: {
-            pedidos_produtos: {
-                include: {
-                    produtos: true
+            clientes: {
+                select: {
+                    id: true,
+                    nome: true,
+                    email: true
                 }
-            }
+            },
+            ...itensDoPedido
         },
-
         orderBy: {
             horario: "desc"
         }
@@ -84,5 +100,6 @@ async function listarPorCliente(clienteId) {
 
 module.exports = {
     criar,
-    listarPorCliente
+    listarPorCliente,
+    listarTodos
 };

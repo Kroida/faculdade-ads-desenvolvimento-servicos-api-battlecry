@@ -23,21 +23,31 @@ async function criarPedido(dados) {
         throw new NotFoundError("Cliente não encontrado");
     }
 
+    const produtosNoPedido = new Set();
+
     for (const item of dados.produtos) {
-        if (!Number.isInteger(item.produto_id)) {
+        if (!Number.isInteger(item.produto_id) || item.produto_id <= 0) {
             throw new BadRequestError("produto_id inválido");
         }
 
         if (typeof item.quantidade !== "number" || item.quantidade <= 0) {
             throw new BadRequestError("Quantidade deve ser maior que zero");
         }
+
+        if (produtosNoPedido.has(item.produto_id)) {
+            throw new BadRequestError(
+                `Produto ${item.produto_id} foi informado mais de uma vez`
+            );
+        }
+
+        produtosNoPedido.add(item.produto_id);
     }
 
     return pedidoRepository.criar(dados);
 }
 
 async function listarPedidosCliente(clienteId) {
-    if (!Number.isInteger(clienteId)) {
+    if (!Number.isInteger(clienteId) || clienteId <= 0) {
         throw new BadRequestError("ID do cliente inválido");
     }
 
@@ -50,7 +60,12 @@ async function listarPedidosCliente(clienteId) {
     return pedidoRepository.listarPorCliente(clienteId);
 }
 
+async function listarTodosPedidos() {
+    return pedidoRepository.listarTodos();
+}
+
 module.exports = {
     criarPedido,
-    listarPedidosCliente
+    listarPedidosCliente,
+    listarTodosPedidos
 };
