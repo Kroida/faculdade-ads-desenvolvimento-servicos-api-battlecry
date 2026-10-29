@@ -19,10 +19,10 @@ async function listar(req, res) {
 
 async function buscarPorId(req, res, next) {
     try {
-        const id = produtoService.buscarProduto(req.params.id);
+        const id = Number(req.params.id);
 
         if (!Number.isInteger(id)) {
-            throw new Error("ID inválido");
+            throw new BadRequestError("ID inválido");
         }
 
         const produto = await produtoService.buscarProduto(id);

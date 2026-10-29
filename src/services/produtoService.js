@@ -34,7 +34,7 @@ async function listarProdutos() {
 }
 
 async function buscarProduto(id) {
-    const produto = produtoRepository.buscarPorId(id);
+    const produto = await produtoRepository.buscarPorId(id);
 
     if (!produto) {
         throw new NotFoundError("Produto não encontrado");

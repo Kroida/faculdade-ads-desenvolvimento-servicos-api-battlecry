@@ -28,7 +28,7 @@ async function buscarPorId(id) {
 }
 
 async function atualizar(id, produto) {
-    return prisma.produtos.findUnique({
+    return prisma.produtos.update({
         where: {
             id: id
         },
@@ -37,7 +37,7 @@ async function atualizar(id, produto) {
 }
 
 async function deletar(id) {
-    return prisma.produtos.findUnique({
+    return prisma.produtos.delete({
         where: {
             id: id
         }
