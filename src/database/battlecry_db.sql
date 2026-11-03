@@ -8,6 +8,9 @@ CREATE TABLE cidades (
     PRIMARY KEY (id)
 );
 
+INSERT INTO cidades VALUES
+    (1, 'Porto Alegre');
+
 CREATE TABLE clientes (
     id INT AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
@@ -26,6 +29,9 @@ CREATE TABLE clientes (
         ON DELETE SET NULL
         ON UPDATE CASCADE
 );
+
+INSERT INTO clientes VALUES
+    (1, 'admin', 0, NOW(), 1, 'adm@battlecry.com', '$2b$10$PuCY33rJFfTZ1dGaLnBzlOjNJ03nUpp/zZ.b5V1dc5wrXKjc/HQ5G', 'ADMIN');
 
 CREATE TABLE pedidos (
     id INT AUTO_INCREMENT,
