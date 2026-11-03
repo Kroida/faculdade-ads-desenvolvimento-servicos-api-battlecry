@@ -1,3 +1,5 @@
+>ATENÇÃO!!! O projeto já vem com uma cidade e usuário predefinidos no id 1 - o id 1 é o administrador, faça login com ele para ter acesso ao crud completo
+
 # BattleCry API ⚔️
 
 API REST para uma loja online desenvolvida em **JavaScript com Node.js**, utilizando **Express**, **Prisma ORM**, **MySQL**, **JWT** e **bcrypt**.
