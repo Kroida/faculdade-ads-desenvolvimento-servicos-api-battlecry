@@ -55,6 +55,7 @@ BattleCry/
 │   ├── API.md
 │   ├── DIAGRAMAS.md
 │   ├── TESTES.md
+│   ├── swagger.json
 │   └── BattleCry.postman_collection.json
 ├── prisma/
 │   ├── migrations/
@@ -231,7 +232,36 @@ Faça login novamente para gerar um JWT contendo o perfil atualizado.
 | `PUT` | `/pedidos/:id` | Admin | Atualiza endereço, cliente e/ou itens do pedido |
 | `DELETE` | `/pedidos/:id` | Admin | Exclui pedido e restaura estoque |
 
+> As operações `PUT` e `DELETE` de clientes, pedidos, categorias e cidades são exclusivas de administradores e passam pelos middlewares de autenticação e autorização.
+
 > `GET /produtos` lista os produtos cadastrados e retorna a quantidade em estoque. O projeto não possui um endpoint separado `/produtos/disponiveis`.
+
+
+## Swagger / OpenAPI
+
+A API possui documentação interativa com **Swagger UI**. Com o servidor em execução, acesse:
+
+```text
+http://localhost:3000/api-docs
+```
+
+A especificação OpenAPI utilizada pela interface pode ser consultada diretamente em:
+
+```text
+http://localhost:3000/api-docs.json
+```
+
+O endpoint `/api-docs.json` serve o arquivo `docs/swagger.json` com cache desabilitado, evitando que alterações recentes na documentação fiquem presas no navegador ou no processo do Node.js.
+
+Para testar rotas protegidas pelo Swagger:
+
+1. execute `POST /auth/login`;
+2. copie o JWT retornado;
+3. clique em **Authorize**;
+4. informe o token;
+5. execute as rotas protegidas.
+
+As operações administrativas de clientes, produtos, pedidos, categorias e cidades exigem um token de usuário com perfil `ADMIN`.
 
 ## Respostas de erro
 
@@ -272,6 +302,7 @@ O preço enviado pelo cliente não é aceito: o valor do item é obtido da tabel
 - [Endpoints e exemplos](docs/API.md)
 - [UML e fluxogramas](docs/DIAGRAMAS.md)
 - [Roteiro de testes](docs/TESTES.md)
+- `docs/swagger.json` — especificação OpenAPI exibida em `/api-docs`
 - `docs/BattleCry.postman_collection.json` — coleção pronta para importar no Postman
 
 ## Observações de segurança
