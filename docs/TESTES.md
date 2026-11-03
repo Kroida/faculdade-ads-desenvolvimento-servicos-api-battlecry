@@ -156,3 +156,20 @@ Esperado: `404`:
   "erro": "Rota não encontrada"
 }
 ```
+
+
+## Gerenciamento administrativo adicional
+
+Com JWT de `ADMIN`, teste:
+
+- `PUT /clientes/:id` → `200`;
+- `DELETE /clientes/:id` → `204`;
+- `PUT /categorias/:id` → `200`;
+- `DELETE /categorias/:id` sem produtos → `204`;
+- `DELETE /categorias/:id` com produtos vinculados → `400`;
+- `PUT /cidades/:id` → `200`;
+- `DELETE /cidades/:id` → `204`;
+- `PUT /pedidos/:id` → `200` e estoque consistente;
+- `DELETE /pedidos/:id` → `204` e estoque restaurado.
+
+Repita uma rota administrativa sem token (`401`) e com token de cliente (`403`).

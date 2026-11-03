@@ -186,7 +186,7 @@ Authorization: Bearer SEU_TOKEN
 Perfis utilizados:
 
 - `CLIENTE`: cria e consulta os próprios pedidos.
-- `ADMIN`: possui acesso adicional ao gerenciamento de produtos, consulta de clientes e consulta de todos os pedidos.
+- `ADMIN`: possui acesso adicional ao gerenciamento de clientes, produtos, pedidos, categorias e cidades.
 
 O cadastro público sempre força `tipo = "CLIENTE"`; enviar `"ADMIN"` no body não transforma o usuário em administrador.
 
@@ -209,7 +209,17 @@ Faça login novamente para gerar um JWT contendo o perfil atualizado.
 | `POST` | `/clientes` | Público | Cadastra cliente |
 | `GET` | `/clientes` | Admin | Lista clientes sem expor senha |
 | `GET` | `/clientes/:id` | Admin | Consulta cliente por ID |
+| `PUT` | `/clientes/:id` | Admin | Atualiza dados do cliente |
+| `DELETE` | `/clientes/:id` | Admin | Exclui cliente e seus pedidos, restaurando estoque |
 | `POST` | `/auth/login` | Público | Autentica usuário e gera JWT |
+| `GET` | `/cidades` | Público | Lista cidades |
+| `POST` | `/cidades` | Admin | Cadastra cidade |
+| `PUT` | `/cidades/:id` | Admin | Atualiza cidade |
+| `DELETE` | `/cidades/:id` | Admin | Exclui cidade; clientes vinculados ficam sem cidade |
+| `GET` | `/categorias` | Público | Lista categorias |
+| `POST` | `/categorias` | Admin | Cadastra categoria |
+| `PUT` | `/categorias/:id` | Admin | Atualiza categoria |
+| `DELETE` | `/categorias/:id` | Admin | Exclui categoria sem produtos vinculados |
 | `GET` | `/produtos` | Público | Lista produtos cadastrados |
 | `GET` | `/produtos/:id` | Público | Consulta produto por ID |
 | `POST` | `/produtos` | Admin | Cadastra produto |
@@ -218,6 +228,8 @@ Faça login novamente para gerar um JWT contendo o perfil atualizado.
 | `POST` | `/pedidos` | Cliente autenticado | Cria pedido para o usuário do JWT |
 | `GET` | `/pedidos/meus` | Cliente autenticado | Lista os próprios pedidos |
 | `GET` | `/pedidos` | Admin | Lista todos os pedidos |
+| `PUT` | `/pedidos/:id` | Admin | Atualiza endereço, cliente e/ou itens do pedido |
+| `DELETE` | `/pedidos/:id` | Admin | Exclui pedido e restaura estoque |
 
 > `GET /produtos` lista os produtos cadastrados e retorna a quantidade em estoque. O projeto não possui um endpoint separado `/produtos/disponiveis`.
 

@@ -9,8 +9,10 @@ const router = express.Router();
 // Cadastro público de cliente.
 router.post("/", clienteController.criar);
 
-// Consultas administrativas; evitam exposição pública de dados pessoais.
+// Gerenciamento de clientes: somente administradores.
 router.get("/", autenticar, somenteAdmin, clienteController.listar);
 router.get("/:id", autenticar, somenteAdmin, clienteController.buscarPorId);
+router.put("/:id", autenticar, somenteAdmin, clienteController.atualizar);
+router.delete("/:id", autenticar, somenteAdmin, clienteController.deletar);
 
 module.exports = router;

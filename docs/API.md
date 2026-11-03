@@ -39,6 +39,22 @@ A senha não é retornada.
 
 Consulta um cliente por ID. Requer administrador.
 
+### PUT `/clientes/:id`
+
+Requer administrador. Aceita um ou mais campos: `nome`, `altura`, `nascimento`, `cidade_id`, `email`, `senha` e `tipo`. Senhas novas são armazenadas como hash.
+
+```json
+{
+  "nome": "Luis Atualizado",
+  "cidade_id": 1,
+  "tipo": "CLIENTE"
+}
+```
+
+### DELETE `/clientes/:id`
+
+Requer administrador. Remove o cliente e seus pedidos em transação, restaurando o estoque dos itens. O administrador autenticado não pode excluir a própria conta.
+
 ---
 
 ## Autenticação
@@ -64,6 +80,32 @@ Use o token nas rotas protegidas:
 
 ```http
 Authorization: Bearer eyJhbGciOi...
+```
+
+---
+
+## Categorias e cidades
+
+### Categorias
+
+- `GET /categorias` → público.
+- `POST /categorias` → administrador.
+- `PUT /categorias/:id` → administrador.
+- `DELETE /categorias/:id` → administrador; a exclusão é bloqueada enquanto existirem produtos vinculados.
+
+### Cidades
+
+- `GET /cidades` → público.
+- `POST /cidades` → administrador.
+- `PUT /cidades/:id` → administrador.
+- `DELETE /cidades/:id` → administrador; clientes vinculados passam a ter `cidade_id = null`.
+
+Exemplo de cadastro/atualização:
+
+```json
+{
+  "nome": "Porto Alegre"
+}
 ```
 
 ---
@@ -149,6 +191,23 @@ Requer autenticação. Retorna apenas pedidos pertencentes ao usuário identific
 ### GET `/pedidos`
 
 Requer administrador. Retorna todos os pedidos, cliente associado e itens do pedido.
+
+### PUT `/pedidos/:id`
+
+Requer administrador. Pode atualizar `endereco`, `cliente_id` e/ou `produtos`. Ao substituir os itens, a transação devolve o estoque antigo e reserva as novas quantidades.
+
+```json
+{
+  "endereco": "Rua Atualizada, 200",
+  "produtos": [
+    { "produto_id": 1, "quantidade": 1 }
+  ]
+}
+```
+
+### DELETE `/pedidos/:id`
+
+Requer administrador. Exclui os itens e o pedido em transação e devolve as quantidades ao estoque.
 
 ---
 

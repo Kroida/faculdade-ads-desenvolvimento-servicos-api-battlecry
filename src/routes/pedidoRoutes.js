@@ -15,4 +15,8 @@ router.get("/", autenticar, somenteAdmin, pedidoController.listarTodos);
 // Cliente autenticado consulta apenas os próprios pedidos.
 router.get("/meus", autenticar, pedidoController.listarMeus);
 
+// Gerenciamento administrativo de pedidos.
+router.put("/:id", autenticar, somenteAdmin, pedidoController.atualizar);
+router.delete("/:id", autenticar, somenteAdmin, pedidoController.deletar);
+
 module.exports = router;
